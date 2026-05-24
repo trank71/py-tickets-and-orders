@@ -1,4 +1,4 @@
-from django.db.models import QuerySet
+from django.db.models import QuerySet, F
 
 from db.models import MovieSession
 
@@ -45,8 +45,11 @@ def delete_movie_session_by_id(session_id: int) -> None:
 
 
 def get_taken_seats(movie_session_id: int) -> list[dict]:
-    return list(MovieSession.objects.filter(
-        id=movie_session_id
-    ).values(
-        "row",
-        "seat"))
+    return list(
+        MovieSession.objects
+        .filter(id=movie_session_id)
+        .values(
+            row=F("tickets__row"),
+            seat=F("tickets__seat"),
+        )
+    )
