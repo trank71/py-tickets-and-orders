@@ -17,3 +17,10 @@ def create_order(
         if date:
             order.date = date
         return order
+
+
+def get_orders(username: str | None = None) -> QuerySet:
+    if username:
+        return Order.objects.filter(username=username)
+
+    return Order.objects.all()
