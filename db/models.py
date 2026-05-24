@@ -22,6 +22,12 @@ class Movie(models.Model):
     actors = models.ManyToManyField(to=Actor, related_name="movies")
     genres = models.ManyToManyField(to=Genre, related_name="movies")
 
+
+    class Meta:
+        indexes = [
+            models.Index(fields=["title"])
+        ]
+
     def __str__(self) -> str:
         return self.title
 
