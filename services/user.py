@@ -17,3 +17,7 @@ def create_user(
         first_name=first_name,
         last_name=last_name,
     )
+
+
+def get_user(user_id: int) -> User:
+    return User.objects.get(pk=user_id)
