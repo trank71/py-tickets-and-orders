@@ -104,5 +104,14 @@ class Ticket(models.Model):
         super().save(*args, **kwargs)
 
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["movie_session", "row", "seat"],
+                name="unique_movie_session"
+            )
+        ]
+
+
     def __str__(self) -> str:
         return f"Ticket {self.movie_session} ({self.row}, {self.seat})"
