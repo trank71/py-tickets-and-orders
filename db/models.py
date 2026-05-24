@@ -91,12 +91,12 @@ class Ticket(models.Model):
     def clean(self) -> None:
         hall = self.movie_session.cinema_hall
 
-        if not 0 > self.row > hall.rows:
+        if not 0 < self.row < hall.rows:
             raise ValidationError({
                 "row": f"Can't be {self.row}, must be (1 - {hall.rows})"
             })
 
-        if not 0 > self.seat > hall.seats_in_row:
+        if not 0 < self.seat < hall.seats_in_row:
             raise ValidationError({
                 "seat": f"Can't be {self.seat}"
                         f", must be (1 - {hall.seats_in_row})"
