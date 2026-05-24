@@ -10,18 +10,10 @@ def create_user(
         first_name: str | None = None,
         last_name: str | None = None,
     ) -> User:
-    user = User(username=username)
-
-    user.set_password(password)
-
-    if email:
-        user.email = email
-
-    if first_name:
-        user.first_name = first_name
-
-    if last_name:
-        user.last_name = last_name
-
-    user.save()
-    return user
+    return User.objects.create_user(
+        username=username,
+        password=password,
+        email=email,
+        first_name=first_name,
+        last_name=last_name,
+    )
