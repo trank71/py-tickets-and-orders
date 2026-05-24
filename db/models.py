@@ -5,6 +5,10 @@ from django.db import models
 from django.conf import settings
 
 
+class User(AbstractUser):
+    pass
+
+
 class Genre(models.Model):
     name = models.CharField(max_length=255, unique=True)
 
@@ -25,7 +29,6 @@ class Movie(models.Model):
     description = models.TextField()
     actors = models.ManyToManyField(to=Actor, related_name="movies")
     genres = models.ManyToManyField(to=Genre, related_name="movies")
-
 
     class Meta:
         indexes = [
@@ -65,12 +68,13 @@ class MovieSession(models.Model):
 class Order(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(
-        to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="orders"
+        to=settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="orders"
     )
 
-
     class Meta:
-        ordering = ['-created_at']
+        ordering = ["-created_at"]
 
     def __str__(self) -> str:
         return f"Order: {self.created_at}"
@@ -86,25 +90,23 @@ class Ticket(models.Model):
     row = models.IntegerField()
     seat = models.IntegerField()
 
-
     def clean(self) -> None:
         hall = self.movie_session.cinema_hall
 
         if not 0 > self.row > hall.rows:
             raise ValidationError({
-             "row": f"Can't be {self.row}, must be (1 - {hall.rows})"
+                "row": f"Can't be {self.row}, must be (1 - {hall.rows})"
             })
 
         if not 0 > self.seat > hall.seats_in_row:
             raise ValidationError({
-                "seat": f"Can't be {self.seat}, must be (1 - {hall.seats_in_row})"
+                "seat": f"Can't be {self.seat}"
+                        f", must be (1 - {hall.seats_in_row})"
             })
-
 
     def save(self, *args, **kwargs) -> None:
         self.full_clean()
         super().save(*args, **kwargs)
-
 
     class Meta:
         constraints = [
@@ -114,10 +116,5 @@ class Ticket(models.Model):
             )
         ]
 
-
     def __str__(self) -> str:
         return f"Ticket {self.movie_session} ({self.row}, {self.seat})"
-
-
-class User(AbstractUser):
-    pass
