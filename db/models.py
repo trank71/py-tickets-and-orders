@@ -75,7 +75,7 @@ class Order(models.Model):
         ordering = ["-created_at"]
 
     def __str__(self) -> str:
-        return f"Order: {self.created_at}"
+        return f"<Order: {self.created_at}>"
 
 
 class Ticket(models.Model):
@@ -91,12 +91,12 @@ class Ticket(models.Model):
     def clean(self) -> None:
         hall = self.movie_session.cinema_hall
 
-        if not 0 < self.row < hall.rows:
+        if not 0 < self.row <= hall.rows:
             raise ValidationError({
                 "row": f"Can't be {self.row}, must be (1 - {hall.rows})"
             })
 
-        if not 0 < self.seat < hall.seats_in_row:
+        if not 0 < self.seat <= hall.seats_in_row:
             raise ValidationError({
                 "seat": f"Can't be {self.seat}"
                         f", must be (1 - {hall.seats_in_row})"
@@ -115,4 +115,4 @@ class Ticket(models.Model):
         ]
 
     def __str__(self) -> str:
-        return f"Ticket {self.movie_session} ({self.row}, {self.seat})"
+        return f"<Ticket: {self.movie_session} ({self.row}, {self.seat})>"

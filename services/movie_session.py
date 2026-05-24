@@ -48,5 +48,5 @@ def get_taken_seats(movie_session_id: int) -> list[dict]:
     return list(MovieSession.objects.filter(
         id=movie_session_id
     ).values(
-        "tickets__row",
-        "tickets__seat"))
+        "row",
+        "seat"))
