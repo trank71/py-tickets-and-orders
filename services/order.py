@@ -17,10 +17,10 @@ def create_order(
             order.created_at = date
         for ticket in tickets:
             Ticket.objects.create(
-                movie_session=ticket['movie_session'],
+                movie_session=ticket["movie_session"],
                 order=order,
-                row=ticket['row'],
-                seat=ticket['seat'],
+                row=ticket["row"],
+                seat=ticket["seat"],
             )
         return order
 
