@@ -1,6 +1,8 @@
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AbstractUser
 from django.core.exceptions import ValidationError
 from django.db import models
+
+from django.conf import settings
 
 
 class Genre(models.Model):
@@ -63,7 +65,7 @@ class MovieSession(models.Model):
 class Order(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(
-        to=User, on_delete=models.CASCADE, related_name="orders"
+        to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="orders"
     )
 
 
@@ -88,9 +90,9 @@ class Ticket(models.Model):
     def clean(self) -> None:
         hall = self.movie_session.cinema_hall
 
-        if not 0 > self.row > hall.row:
+        if not 0 > self.row > hall.rows:
             raise ValidationError({
-             "row": f"Can't be {self.row}, must be (1 - {hall.row})"
+             "row": f"Can't be {self.row}, must be (1 - {hall.rows})"
             })
 
         if not 0 > self.seat > hall.seats_in_row:
@@ -108,10 +110,14 @@ class Ticket(models.Model):
         constraints = [
             models.UniqueConstraint(
                 fields=["movie_session", "row", "seat"],
-                name="unique_movie_session"
+                name="unique_ticket"
             )
         ]
 
 
     def __str__(self) -> str:
         return f"Ticket {self.movie_session} ({self.row}, {self.seat})"
+
+
+class User(AbstractUser):
+    pass
