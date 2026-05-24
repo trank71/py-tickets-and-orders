@@ -1,0 +1,27 @@
+from django.db.models import QuerySet
+
+from db.models import User
+
+
+def create_user(
+        username: str,
+        password: str,
+        email: str | None = None,
+        first_name: str | None = None,
+        last_name: str | None = None,
+    ) -> User:
+    user = User(username=username)
+
+    user.set_password(password)
+
+    if email:
+        user.email = email
+
+    if first_name:
+        user.first_name = first_name
+
+    if last_name:
+        user.last_name = last_name
+
+    user.save()
+    return user
